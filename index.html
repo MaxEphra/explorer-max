@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Explorer Max</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #e5f5f2;
+      color: #202020;
+    }
+    header {
+      background-color: #075e54;
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0 0 0.5rem;
+    }
+    header input {
+      padding: 0.5rem;
+      width: 80%;
+      max-width: 400px;
+      border: none;
+      border-radius: 5px;
+    }
+    main {
+      padding: 2rem;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #ccc;
+    }
+    th {
+      background-color: #25d366;
+      color: white;
+    }
+    .copy-btn {
+      background-color: #128c7e;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .copy-btn:hover {
+      background-color: #0e7166;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Explorer Max</h1>
+    <input type="text" id="search" placeholder="Buscar hash..." />
+  </header>
+  <main>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Hash SHA-256</th>
+          <th>Data</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+      <tbody id="hashTable">
+        <!-- Hashes aparecem aqui -->
+      </tbody>
+    </table>
+  </main>
+
+  <script>
+    const hashes = [
+      {
+        n: 1,
+        hash: "09a0d0a7a8986df456abcff32910c8a5dc922c2a46ef7c6cc5dfc9f8b2aefabc",
+        data: "2025-04-07T16:50:00"
+      },
+      {
+        n: 2,
+        hash: "f98a2be7f76dc98a002aa9b1cf9e47074eaa739a1a31292ea64e1741efcbb321",
+        data: "2025-04-07T16:53:00"
+      },
+    ];
+
+    function renderHashes(filter = "") {
+      const tbody = document.getElementById("hashTable");
+      tbody.innerHTML = "";
+      hashes
+        .filter(entry => entry.hash.toLowerCase().includes(filter.toLowerCase()))
+        .forEach(entry => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${entry.n}</td>
+            <td>${entry.hash}</td>
+            <td>${new Date(entry.data).toLocaleString()}</td>
+            <td><button class="copy-btn" onclick="copyHash('${entry.hash}')">Copiar</button></td>
+          `;
+          tbody.appendChild(tr);
+        });
+    }
+
+    function copyHash(hash) {
+      navigator.clipboard.writeText(hash);
+      alert("Hash copiada: " + hash);
+    }
+
+    document.getElementById("search").addEventListener("input", function () {
+      renderHashes(this.value);
+    });
+
+    renderHashes();
+  </script>
+</body>
+</html>
